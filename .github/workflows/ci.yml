@@ -10,6 +10,7 @@ on:
 # 프로젝트에 맞게 수정하세요
 env:
   SCHEME: ARENA                     # Xcode Scheme 이름
+  PROJECT: ARENA.xcodeproj          # .xcodeproj 파일명
   DESTINATION: "platform=iOS Simulator,name=iPhone 16,OS=latest"
   XCODE_VERSION: "16.3"             # 사용할 Xcode 버전
 # ─────────────────────────────────────────
@@ -63,27 +64,31 @@ jobs:
       - name: Resolve Swift Package dependencies
         run: |
           xcodebuild -resolvePackageDependencies \
-            -scheme "$SCHEME" \
-            -scmProvider github
+            -project "$PROJECT" \
+            -scheme "$SCHEME"
 
       - name: Build
         run: |
+          set -o pipefail
           xcodebuild build \
+            -project "$PROJECT" \
             -scheme "$SCHEME" \
             -destination "$DESTINATION" \
             -configuration Debug \
             CODE_SIGNING_ALLOWED=NO \
-            | xcpretty --color && exit ${PIPESTATUS[0]}
+            | xcpretty --color
 
       - name: Test
         run: |
+          set -o pipefail
           xcodebuild test \
+            -project "$PROJECT" \
             -scheme "$SCHEME" \
             -destination "$DESTINATION" \
             -configuration Debug \
             -resultBundlePath TestResults.xcresult \
             CODE_SIGNING_ALLOWED=NO \
-            | xcpretty --color && exit ${PIPESTATUS[0]}
+            | xcpretty --color
 
       - name: Upload test results
         if: always()
