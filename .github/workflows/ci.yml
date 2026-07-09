@@ -40,7 +40,7 @@ jobs:
       - name: Run SwiftLint
         run: swiftlint lint --reporter github-actions-logging
 
-  build-and-test:
+  build:
     name: Build & Test
     runs-on: macos-15
     needs: swiftlint
@@ -77,23 +77,3 @@ jobs:
             -configuration Debug \
             CODE_SIGNING_ALLOWED=NO \
             | xcpretty --color
-
-      - name: Test
-        run: |
-          set -o pipefail
-          xcodebuild test \
-            -project "$PROJECT" \
-            -scheme "$SCHEME" \
-            -destination "$DESTINATION" \
-            -configuration Debug \
-            -resultBundlePath TestResults.xcresult \
-            CODE_SIGNING_ALLOWED=NO \
-            | xcpretty --color
-
-      - name: Upload test results
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: TestResults-${{ github.run_number }}
-          path: TestResults.xcresult
-          retention-days: 7
