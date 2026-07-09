@@ -11,7 +11,7 @@ on:
 env:
   SCHEME: ARENA                     # Xcode Scheme 이름
   PROJECT: ARENA.xcodeproj          # .xcodeproj 파일명
-  DESTINATION: "platform=iOS Simulator,name=iPhone 16 Pro,OS=18.4"
+  DESTINATION: "platform=iOS Simulator,name=iPhone 16 Pro"
   XCODE_VERSION: "16.3"             # 사용할 Xcode 버전
 # ─────────────────────────────────────────
 
